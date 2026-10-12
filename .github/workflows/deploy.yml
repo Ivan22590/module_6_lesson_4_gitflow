@@ -8,7 +8,6 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  IMAGE_NAME_LOWER: ${{ github.repository | lower }}
 
 jobs:
   build-and-push:
@@ -17,9 +16,15 @@ jobs:
     permissions:
       contents: read
       packages: write
+    outputs:
+      image: ${{ steps.lower_name.outputs.image }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Normalize image name (lowercase)
+        id: lower_name
+        run: echo "image=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -73,17 +78,17 @@ jobs:
             docker rm time-server || true
 
             # Удаляем старый образ
-            docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest || true
+            docker rmi ${{ env.REGISTRY }}/${{ needs.build-and-push.outputs.image }}:latest || true
 
             # Скачиваем новый образ
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
+            docker pull ${{ env.REGISTRY }}/${{ needs.build-and-push.outputs.image }}:latest
 
             # Запускаем контейнер
             docker run -d \
               --name time-server \
               -p 8001:8001 \
               --restart unless-stopped \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LOWER }}:latest
+              ${{ env.REGISTRY }}/${{ needs.build-and-push.outputs.image }}:latest
 
             # Очищаем неиспользуемые образы
             docker image prune -f
