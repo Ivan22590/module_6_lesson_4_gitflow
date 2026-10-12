@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ## Запуск
 
 ```powershell
-.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+.venv\Scripts\python.exe -m uvicorn main:app --host 127.0.0.1 --port 8001 --reload
 ```
 
 ## Эндпоинты
@@ -37,7 +37,14 @@ pip install -r requirements.txt
 }
 ```
 
-## Документация
+## Docker
 
-Интерактивная Swagger-документация доступна по адресу:
-[http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+### Сборка образа:
+```powershell
+docker build -t time-server .
+```
+
+### Запуск контейнера:
+```powershell
+docker run -p 8001:8001 time-server
+```
