@@ -27,6 +27,7 @@ pip install -r requirements.txt
 |-------|------|----------|
 | GET | `/` | Приветственное сообщение |
 | GET | `/time` | Текущее время сервера |
+| GET | `/date` | Текущая дата сервера |
 
 ### Пример ответа `/time`:
 ```json
@@ -34,6 +35,15 @@ pip install -r requirements.txt
   "server_time": "2026-10-12 14:41:29",
   "iso": "2026-10-12T14:41:29.208071",
   "timezone": "local"
+}
+```
+
+### Пример ответа `/date`:
+```json
+{
+  "server_date": "2026-10-12",
+  "iso": "2026-10-12",
+  "day_of_week": "Monday"
 }
 ```
 
