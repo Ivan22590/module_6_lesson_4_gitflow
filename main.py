@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from datetime import datetime
+from datetime import datetime, date
 
 app = FastAPI(title="Time Server")
 
@@ -16,4 +16,14 @@ def get_time():
         "server_time": now.strftime("%Y-%m-%d %H:%M:%S"),
         "iso": now.isoformat(),
         "timezone": "local",
+    }
+
+
+@app.get("/date")
+def get_date():
+    today = date.today()
+    return {
+        "server_date": today.strftime("%Y-%m-%d"),
+        "iso": today.isoformat(),
+        "day_of_week": today.strftime("%A"),
     }
